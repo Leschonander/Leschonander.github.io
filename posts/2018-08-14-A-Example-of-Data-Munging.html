@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Lars Schonander</title>
+        <link rel="stylesheet" href="../css/default.css" />
+        <link rel="shortcut icon" href="../images/icon_HSn_icon.ico" type="image/x-icon" />
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121467707-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-121467707-1');
+    </script>
+    </head>
+    <body>  
+        <h1 id="name">Lars E. Schonander</h1>
+        <header>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            
+        </header>
+
+        <main role="main">
+            <h1>Some Data Munging with Pandas</h1>
+            <article>
+    <section class="header">
+        Posted on August 14, 2018
+        
+    </section>
+    <section>
+        <p>When doing data projects, working with <code>Pandas</code> is a tool that I will always reach for first. Recently, I was working with Capital Bike Shares public <a href="https://gbfs.capitalbikeshare.com/gbfs/gbfs.json">API</a>, and along with my usual method of cleaning up data, had a discovery that makes certain jobs easier.</p>
+<p>First, my usual way of gathering data from a JSON feed.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1">stationId <span class="op">=</span> pd.Series(data[<span class="dv">0</span>][<span class="st">'station_id'</span>])</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">bikesAv <span class="op">=</span> pd.Series(data[<span class="dv">0</span>][<span class="st">'num_bikes_available'</span>])</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">bikesDis <span class="op">=</span> pd.Series(data[<span class="dv">0</span>][<span class="st">'num_bikes_disabled'</span>])</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">docksOpen <span class="op">=</span> pd.Series(data[<span class="dv">0</span>][<span class="st">'num_docks_available'</span>])</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">docksDis <span class="op">=</span> pd.Series(data[<span class="dv">0</span>][<span class="st">'num_docks_disabled'</span>])</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(data)):</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">    stationId[i] <span class="op">=</span> pd.Series(data[i][<span class="st">'station_id'</span>])</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">    bikesAv[i] <span class="op">=</span> pd.Series(data[i][<span class="st">'num_bikes_available'</span>])</a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">    bikesDis[i] <span class="op">=</span> pd.Series(data[i][<span class="st">'num_bikes_disabled'</span>])</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">    docksOpen[i] <span class="op">=</span> pd.Series(data[i][<span class="st">'num_docks_available'</span>])</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">    docksDis[i] <span class="op">=</span> pd.Series(data[i][<span class="st">'num_docks_disabled'</span>])</a></code></pre></div>
+<p>I like to first create Pandas Series instead of a dataframe from the start because I belive that it makes the data collection more modular, making it easier later down the line to make more dataframes with different conditons attached to them. As seen I create the series first, and then I iterate ver the entire JSON feed to grab the rest of the data.</p>
+<p>Next, combine it into a dataframe, which is simple, but I will show anyway.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1">docksDf <span class="op">=</span> pd.DataFrame({</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="st">&quot;Station ID&quot;</span>: stationId.astype(<span class="st">'int32'</span>),</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="st">&quot;Bikes Available&quot;</span>: bikesAv.astype(<span class="st">'int32'</span>),</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    <span class="st">&quot;Bikes Disabled&quot;</span>: bikesDis.astype(<span class="st">'int32'</span>),</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">    <span class="st">&quot;Docks Available&quot;</span>: docksOpen.astype(<span class="st">'int32'</span>),</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">    <span class="st">&quot;Docks Disabled&quot;</span>: docksDis.astype(<span class="st">'int32'</span>)</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">})</a></code></pre></div>
+<p>The reason I have <code>astype('int32')</code> their is to standardize the data, along with making sure in the Pandas dataframe, that the dtype does not appear. The dtype apearing in the dataframe can sometimes be a issue, so <code>astype('int32')</code> solves the issue nicely.</p>
+<p>Belatedly, I discovered a nice trick with Numpy on Dataframes. I tried to do the usual <code>a &lt; b &lt;c</code> style comparison on a pandas dataframe with <code>where()</code> but I got a error. I discovered after some googling that <code>np.logical_and</code> will let one make these types of logic statements when managing dataframes. As seen below, I was able to do the comparison that I wanted to do with <code>np.logical_and</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1">AVDSDf <span class="op">=</span> pd.DataFrame({</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="st">&quot;Below 5 Available&quot;</span>: (docksDf[<span class="st">&quot;Bikes Available&quot;</span>]).where(docksDf[<span class="st">&quot;Bikes Available&quot;</span>] <span class="op">&lt;</span> <span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    <span class="st">&quot;Between 5 and 10 Available&quot;</span>: (docksDf[<span class="st">&quot;Bikes Available&quot;</span>]).where(np.logical_and(docksDf[<span class="st">&quot;Bikes Available&quot;</span>] <span class="op">&gt;=</span> <span class="dv">5</span>, </a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">        docksDf[<span class="st">&quot;Bikes Available&quot;</span>] <span class="op">&lt;</span> <span class="dv">10</span>)),</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">    <span class="st">&quot;Between 10 and 20 Available&quot;</span>:  (docksDf[<span class="st">&quot;Bikes Available&quot;</span>]).where(np.logical_and(docksDf[<span class="st">&quot;Bikes Available&quot;</span>] <span class="op">&gt;=</span> <span class="dv">10</span>, </a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">        docksDf[<span class="st">&quot;Bikes Available&quot;</span>] <span class="op">&lt;</span> <span class="dv">20</span>)),</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="st">&quot;Above 20 Available&quot;</span>: (docksDf[<span class="st">&quot;Bikes Available&quot;</span>]).where(<span class="dv">20</span> <span class="op">&lt;=</span> docksDf[<span class="st">&quot;Bikes Available&quot;</span>]),</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">    <span class="st">&quot;Below 5 Disabled&quot;</span>: (docksDf[<span class="st">&quot;Bikes Disabled&quot;</span>]).where(docksDf[<span class="st">&quot;Bikes Disabled&quot;</span>] <span class="op">&lt;</span> <span class="dv">5</span>),</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">    <span class="st">&quot;Between 5 and 10 Disabled&quot;</span>: (docksDf[<span class="st">&quot;Bikes Disabled&quot;</span>]).where(np.logical_and(docksDf[<span class="st">&quot;Bikes Disabled&quot;</span>] <span class="op">&gt;=</span> <span class="dv">5</span>, </a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">        docksDf[<span class="st">&quot;Bikes Disabled&quot;</span>] <span class="op">&lt;</span> <span class="dv">10</span>)),</a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">    <span class="st">&quot;Above 10 Disabled&quot;</span>: (docksDf[<span class="st">&quot;Bikes Disabled&quot;</span>]).where(<span class="dv">10</span> <span class="op">&lt;=</span> docksDf[<span class="st">&quot;Bikes Disabled&quot;</span>])</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">})</a></code></pre></div>
+<p>The virtue of this trick is while simple, it opens up more ways to look at data. For example just by doing this <code>&quot;Disabled to Available Ratio&quot;: (docksDf[&quot;Bikes Disabled&quot;] / docksDf[&quot;Bikes Available&quot;]).astype('float')</code>, I am able to find the ratio of disabled to available bikes. This is convient because this data point, not given directly, with some simple work in Pandas, is able to be revealed. Doing this, I was able to find out that at somepoint on Sunday, around <code>10%</code> of all Capital bikes in D.C were disabled.</p>
+<p>While more complicated munging is possible working with Lambdas and other tools in python, the discovery of <code>np.logical_and</code> is a very convient tool for doing some data exploration.</p>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly built with 
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+            <br>
+            Follow me at:
+            <a href="https://twitter.com/LarsESchonander">@LarsESchonander</a>
+        </footer>
+    </body>
+</html>
