@@ -58,72 +58,72 @@ trying to be the resource I would have wanted.
 <p>While I for a while enjoyed tools such as Leaflet.js or MapBox, only recently have I been able to get spatial analysis libraries installed in Python. Thanks to <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/#gdal">Unofficial Windows Binaries for Python Extension Packages</a> website, geospatial analysis libraries that were once a trouble to install now work on my computer.</p>
 <p>This has proven helpful because practicing those libraries meant <a href="http://turfjs.org">Turf.js</a>, a JavaScript library devoted to geospatial analysis, makes a lot more sense now, and is pretty useful actually!</p>
 <p>For example, imagine if one was a city planner, and wanted to track the locations of electric bikes, let us assume a data set which is a part of one I am working with:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">const</span> bikes <span class="op">=</span> [</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">        <span class="op">{</span> <span class="dt">lat</span><span class="op">:</span> <span class="fl">38.9043176051402</span><span class="op">,</span> <span class="dt">lon</span><span class="op">:</span> <span class="fl">-77.0160190957944</span><span class="op">,</span> <span class="dt">time</span><span class="op">:</span> <span class="st">'2018-12-26T15:31:32.770277'</span><span class="op">},</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">        <span class="co">// and so on...</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">const</span> bikes <span class="op">=</span> [</a>
+<a class="sourceLine" id="cb2-2" title="2">        <span class="op">{</span> <span class="dt">lat</span><span class="op">:</span> <span class="fl">38.9043176051402</span><span class="op">,</span> <span class="dt">lon</span><span class="op">:</span> <span class="fl">-77.0160190957944</span><span class="op">,</span> <span class="dt">time</span><span class="op">:</span> <span class="st">'2018-12-26T15:31:32.770277'</span><span class="op">},</span></a>
+<a class="sourceLine" id="cb2-3" title="3">        <span class="co">// and so on...</span></a></code></pre></div>
 <p>With leaflet, while points and other geoJSON features can be made and added with ease, geospatial analysis requires other tools.</p>
 <p>For example, to see the distance between points, one can do this with turf.js:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="cf">for</span>(<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="va">bikes</span>.<span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)<span class="op">{</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="cf">if</span> (i <span class="op">===</span> <span class="dv">0</span>)<span class="op">{</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">        <span class="cf">continue</span> <span class="co">// This will prove important</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">        <span class="kw">let</span> <span class="im">from</span> <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([bikes[i].<span class="at">lon</span><span class="op">,</span>bikes[i].<span class="at">lat</span>])</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">        <span class="kw">let</span> to <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([bikes[i <span class="op">-</span> <span class="dv">1</span>].<span class="at">lon</span><span class="op">,</span>bikes[i <span class="op">-</span> <span class="dv">1</span>].<span class="at">lat</span>]) </a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">        <span class="co">// Reason why it does not happen on i == 0 is to prevent a crash if one was doing the i + 1 method</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">        <span class="co">// ^ or that there is no point before [0] to compare to. </span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9">        <span class="kw">let</span> options <span class="op">=</span> <span class="op">{</span><span class="dt">units</span><span class="op">:</span> <span class="st">'miles'</span><span class="op">};</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">        <span class="kw">let</span> distance <span class="op">=</span> <span class="va">turf</span>.<span class="at">distance</span>(<span class="im">from</span><span class="op">,</span> to<span class="op">,</span> options)<span class="op">;</span> <span class="co">// &lt;= Compute the distance. </span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12">        <span class="va">console</span>.<span class="at">log</span>(<span class="vs">`The distance is </span><span class="sc">${</span>distance<span class="sc">}</span><span class="vs">`</span>)</a>
-<a class="sourceLine" id="cb3-13" data-line-number="13">    <span class="op">}</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="op">}</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb3-1" title="1"><span class="cf">for</span>(<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="va">bikes</span>.<span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)<span class="op">{</span></a>
+<a class="sourceLine" id="cb3-2" title="2">    <span class="cf">if</span> (i <span class="op">===</span> <span class="dv">0</span>)<span class="op">{</span></a>
+<a class="sourceLine" id="cb3-3" title="3">        <span class="cf">continue</span> <span class="co">// This will prove important</span></a>
+<a class="sourceLine" id="cb3-4" title="4">    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb3-5" title="5">        <span class="kw">let</span> <span class="im">from</span> <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([bikes[i].<span class="at">lon</span><span class="op">,</span>bikes[i].<span class="at">lat</span>])</a>
+<a class="sourceLine" id="cb3-6" title="6">        <span class="kw">let</span> to <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([bikes[i <span class="op">-</span> <span class="dv">1</span>].<span class="at">lon</span><span class="op">,</span>bikes[i <span class="op">-</span> <span class="dv">1</span>].<span class="at">lat</span>]) </a>
+<a class="sourceLine" id="cb3-7" title="7">        <span class="co">// Reason why it does not happen on i == 0 is to prevent a crash if one was doing the i + 1 method</span></a>
+<a class="sourceLine" id="cb3-8" title="8">        <span class="co">// ^ or that there is no point before [0] to compare to. </span></a>
+<a class="sourceLine" id="cb3-9" title="9">        <span class="kw">let</span> options <span class="op">=</span> <span class="op">{</span><span class="dt">units</span><span class="op">:</span> <span class="st">'miles'</span><span class="op">};</span></a>
+<a class="sourceLine" id="cb3-10" title="10"></a>
+<a class="sourceLine" id="cb3-11" title="11">        <span class="kw">let</span> distance <span class="op">=</span> <span class="va">turf</span>.<span class="at">distance</span>(<span class="im">from</span><span class="op">,</span> to<span class="op">,</span> options)<span class="op">;</span> <span class="co">// &lt;= Compute the distance. </span></a>
+<a class="sourceLine" id="cb3-12" title="12">        <span class="va">console</span>.<span class="at">log</span>(<span class="vs">`The distance is </span><span class="sc">${</span>distance<span class="sc">}</span><span class="vs">`</span>)</a>
+<a class="sourceLine" id="cb3-13" title="13">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb3-14" title="14"><span class="op">}</span></a></code></pre></div>
 <p>By doing this, one can easily check the distance between two points. In my case, I am currently looking into the average location of where Lime Bike and Scooters are located, so this lets me see how far the average parked location is moving during a set period of time.</p>
 <p>Next, what if one wants to see what is the general area where the scooters are contained in? With Turf.js, this is also possible:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">let</span> enveloped <span class="op">=</span> <span class="va">turf</span>.<span class="at">envelope</span>(features)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="va">L</span>.<span class="at">geoJSON</span>(enveloped).<span class="at">addTo</span>(mymap)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">// ^ Create a GeoJSON object consisting of all points, and via leaflet add it to the map</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw">let</span> area <span class="op">=</span> <span class="va">turf</span>.<span class="at">area</span>(enveloped)</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="va">console</span>.<span class="at">log</span>(area)</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">// ^ Calculate the area and then log it. </span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">let</span> enveloped <span class="op">=</span> <span class="va">turf</span>.<span class="at">envelope</span>(features)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="va">L</span>.<span class="at">geoJSON</span>(enveloped).<span class="at">addTo</span>(mymap)</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">// ^ Create a GeoJSON object consisting of all points, and via leaflet add it to the map</span></a>
+<a class="sourceLine" id="cb4-4" title="4"></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="kw">let</span> area <span class="op">=</span> <span class="va">turf</span>.<span class="at">area</span>(enveloped)</a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="va">console</span>.<span class="at">log</span>(area)</a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">// ^ Calculate the area and then log it. </span></a></code></pre></div>
 <p>Beyond these tools just highlighted, their are other useful tools in turf.js as well.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">let</span> pointA <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([<span class="op">-</span><span class="fl">77.566406</span><span class="op">,</span> <span class="fl">32.421008</span>])<span class="op">;</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">let</span> pointB <span class="op">=</span> <span class="va">turf</span>.<span class="at">flip</span>(pointA)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="co">// ^ Flip points!</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw">let</span> points <span class="op">=</span> [<span class="va">turf</span>.<span class="at">point</span>([<span class="op">-</span><span class="fl">77.566406</span><span class="op">,</span> <span class="fl">32.421008</span>])...]</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="kw">let</span> nClusters <span class="op">=</span> <span class="op">{</span><span class="dt">numberOfClusters</span><span class="op">:</span> <span class="dv">5</span><span class="op">};</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">let</span> clustered <span class="op">=</span> <span class="va">turf</span>.<span class="at">clustersKmeans</span>(points<span class="op">,</span> nClusters)<span class="op">;</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">// ^ Use k-means clustering to find where points are clustered!</span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="kw">let</span> line <span class="op">=</span> <span class="va">turf</span>.<span class="at">lineString</span>([[<span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> [<span class="dv">5</span><span class="op">,</span> <span class="dv">6</span>]<span class="op">,</span> [<span class="dv">5</span><span class="op">,</span> <span class="dv">7</span>]<span class="op">,</span> [<span class="dv">5</span><span class="op">,</span> <span class="dv">8</span>]])<span class="op">;</span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="kw">let</span> point <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([<span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>])<span class="op">;</span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="va">turf</span>.<span class="at">booleanContains</span>(line<span class="op">,</span> point)<span class="op">;</span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">// ^ See if one geoJSON object is contained within another!</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">let</span> pointA <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([<span class="op">-</span><span class="fl">77.566406</span><span class="op">,</span> <span class="fl">32.421008</span>])<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">let</span> pointB <span class="op">=</span> <span class="va">turf</span>.<span class="at">flip</span>(pointA)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">// ^ Flip points!</span></a>
+<a class="sourceLine" id="cb5-4" title="4"></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="kw">let</span> points <span class="op">=</span> [<span class="va">turf</span>.<span class="at">point</span>([<span class="op">-</span><span class="fl">77.566406</span><span class="op">,</span> <span class="fl">32.421008</span>])...]</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="kw">let</span> nClusters <span class="op">=</span> <span class="op">{</span><span class="dt">numberOfClusters</span><span class="op">:</span> <span class="dv">5</span><span class="op">};</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="kw">let</span> clustered <span class="op">=</span> <span class="va">turf</span>.<span class="at">clustersKmeans</span>(points<span class="op">,</span> nClusters)<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">// ^ Use k-means clustering to find where points are clustered!</span></a>
+<a class="sourceLine" id="cb5-9" title="9"></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="kw">let</span> line <span class="op">=</span> <span class="va">turf</span>.<span class="at">lineString</span>([[<span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>]<span class="op">,</span> [<span class="dv">5</span><span class="op">,</span> <span class="dv">6</span>]<span class="op">,</span> [<span class="dv">5</span><span class="op">,</span> <span class="dv">7</span>]<span class="op">,</span> [<span class="dv">5</span><span class="op">,</span> <span class="dv">8</span>]])<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="kw">let</span> point <span class="op">=</span> <span class="va">turf</span>.<span class="at">point</span>([<span class="dv">5</span><span class="op">,</span> <span class="dv">5</span>])<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-12" title="12"><span class="va">turf</span>.<span class="at">booleanContains</span>(line<span class="op">,</span> point)<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-13" title="13"><span class="co">// ^ See if one geoJSON object is contained within another!</span></a></code></pre></div>
 <h3 id="an-additional-note">An additional note:</h3>
 <p>With some basic stats, geospatial analysis can be made even more useful. For example, add in some calculation of the standard deviation, the average change in location can be made even more useful!</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">let</span> bikeList <span class="op">=</span> []</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="va">bikes</span>.<span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)<span class="op">{</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">    <span class="va">bikeList</span>.<span class="at">push</span>(bikes[i].<span class="at">lon</span>)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="op">}</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">// ^ Store the values in array</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="kw">const</span> Mean <span class="op">=</span> (Array) <span class="op">=&gt;</span> <span class="op">{</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="kw">const</span> m <span class="op">=</span> <span class="va">Array</span>.<span class="at">reduce</span>((accumulator<span class="op">,</span> currentValue<span class="op">,</span> currentIndex<span class="op">,</span> _) <span class="op">=&gt;</span> accumulator <span class="op">+</span> currentValue)<span class="op">;</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">    <span class="cf">return</span> m / <span class="va">Array</span>.<span class="at">length</span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="op">}</span>       </a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">// ^ Mean function using JavaScript reduce syntax instead of a for loop and a sum variable. </span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="kw">const</span> StandardDeviation <span class="op">=</span> (Array) <span class="op">=&gt;</span> <span class="op">{</span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12">    <span class="kw">let</span> sum <span class="op">=</span> <span class="dv">0</span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13">    <span class="cf">for</span>(<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="va">Array</span>.<span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)<span class="op">{</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14">        sum <span class="op">+=</span> (Array[i] <span class="op">-</span> <span class="at">Mean</span>(Array))<span class="op">**</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15">    <span class="op">}</span></a>
-<a class="sourceLine" id="cb6-16" data-line-number="16">    <span class="kw">const</span> std <span class="op">=</span> <span class="va">Math</span>.<span class="at">sqrt</span>(sum / <span class="va">Array</span>.<span class="at">length</span>)</a>
-<a class="sourceLine" id="cb6-17" data-line-number="17">    <span class="cf">return</span> std</a>
-<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="op">}</span></a>
-<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="co">// ^ Calculate the standard deviation </span></a>
-<a class="sourceLine" id="cb6-20" data-line-number="20"><span class="kw">let</span> bike_StandardDeviation <span class="op">=</span> <span class="at">StandardDeviation</span>(bikeSTDList)</a>
-<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="va">console</span>.<span class="at">log</span>(bike_StandardDeviation)</a>
-<a class="sourceLine" id="cb6-22" data-line-number="22"><span class="co">// ^ Calculate standard deviation of the change in longitude. </span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">let</span> bikeList <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="va">bikes</span>.<span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)<span class="op">{</span></a>
+<a class="sourceLine" id="cb6-3" title="3">    <span class="va">bikeList</span>.<span class="at">push</span>(bikes[i].<span class="at">lon</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="op">}</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co">// ^ Store the values in array</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="kw">const</span> Mean <span class="op">=</span> (Array) <span class="kw">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb6-7" title="7">    <span class="kw">const</span> m <span class="op">=</span> <span class="va">Array</span>.<span class="at">reduce</span>((accumulator<span class="op">,</span> currentValue<span class="op">,</span> currentIndex<span class="op">,</span> _) <span class="kw">=&gt;</span> accumulator <span class="op">+</span> currentValue)<span class="op">;</span></a>
+<a class="sourceLine" id="cb6-8" title="8">    <span class="cf">return</span> m / <span class="va">Array</span>.<span class="at">length</span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="op">}</span>       </a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="co">// ^ Mean function using JavaScript reduce syntax instead of a for loop and a sum variable. </span></a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="kw">const</span> StandardDeviation <span class="op">=</span> (Array) <span class="kw">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb6-12" title="12">    <span class="kw">let</span> sum <span class="op">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb6-13" title="13">    <span class="cf">for</span>(<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> <span class="va">Array</span>.<span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)<span class="op">{</span></a>
+<a class="sourceLine" id="cb6-14" title="14">        sum <span class="op">+=</span> (Array[i] <span class="op">-</span> <span class="at">Mean</span>(Array))<span class="op">**</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb6-15" title="15">    <span class="op">}</span></a>
+<a class="sourceLine" id="cb6-16" title="16">    <span class="kw">const</span> std <span class="op">=</span> <span class="va">Math</span>.<span class="at">sqrt</span>(sum / <span class="va">Array</span>.<span class="at">length</span>)</a>
+<a class="sourceLine" id="cb6-17" title="17">    <span class="cf">return</span> std</a>
+<a class="sourceLine" id="cb6-18" title="18"><span class="op">}</span></a>
+<a class="sourceLine" id="cb6-19" title="19"><span class="co">// ^ Calculate the standard deviation </span></a>
+<a class="sourceLine" id="cb6-20" title="20"><span class="kw">let</span> bike_StandardDeviation <span class="op">=</span> <span class="at">StandardDeviation</span>(bikeSTDList)</a>
+<a class="sourceLine" id="cb6-21" title="21"><span class="va">console</span>.<span class="at">log</span>(bike_StandardDeviation)</a>
+<a class="sourceLine" id="cb6-22" title="22"><span class="co">// ^ Calculate standard deviation of the change in longitude. </span></a></code></pre></div>
 <p>While there is a lot more to doing geospatial analysis by programming then these various examples, they are still interesting and worth taking a look at.</p>
     </section>
 </article>

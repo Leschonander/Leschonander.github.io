@@ -56,50 +56,50 @@
 <p>Reason, or ReasonML is a dialect of OCaml designed to work with JavaScript because of its relationship to BuckleScript, a OCaml to JavaScript compiler that is also used for Reason. The virtue of this then, is that Reason can not only use both JavaScript and OCaml libraries, it can function on many parts of the stack as well. Beyond this, the pragmatic approach Reason takes to functional programming, inherited from OCaml, is very useful.</p>
 <h3 id="a-comparison">A Comparison</h3>
 <p>In many imperative languages, one would do FizzBuzz like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="cf">for</span> num <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">100</span>):</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="cf">if</span> (num <span class="op">%</span> <span class="dv">15</span> <span class="op">==</span> <span class="dv">0</span>):</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">        <span class="bu">print</span>(<span class="st">&quot;FizzBuzz&quot;</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">    <span class="cf">elif</span> (num <span class="op">%</span> <span class="dv">3</span> <span class="op">==</span> <span class="dv">0</span>):</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">        <span class="bu">print</span>(<span class="st">&quot;Fizz&quot;</span>)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">    <span class="cf">elif</span> (num <span class="op">%</span> <span class="dv">5</span> <span class="op">==</span> <span class="dv">0</span>):</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">        <span class="bu">print</span>(<span class="st">&quot;Buzz&quot;</span>)</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">    <span class="cf">else</span>:</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">        <span class="bu">print</span>(num) </a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" title="1"><span class="cf">for</span> num <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">100</span>):</a>
+<a class="sourceLine" id="cb1-2" title="2">    <span class="cf">if</span> (num <span class="op">%</span> <span class="dv">15</span> <span class="op">==</span> <span class="dv">0</span>):</a>
+<a class="sourceLine" id="cb1-3" title="3">        <span class="bu">print</span>(<span class="st">&quot;FizzBuzz&quot;</span>)</a>
+<a class="sourceLine" id="cb1-4" title="4">    <span class="cf">elif</span> (num <span class="op">%</span> <span class="dv">3</span> <span class="op">==</span> <span class="dv">0</span>):</a>
+<a class="sourceLine" id="cb1-5" title="5">        <span class="bu">print</span>(<span class="st">&quot;Fizz&quot;</span>)</a>
+<a class="sourceLine" id="cb1-6" title="6">    <span class="cf">elif</span> (num <span class="op">%</span> <span class="dv">5</span> <span class="op">==</span> <span class="dv">0</span>):</a>
+<a class="sourceLine" id="cb1-7" title="7">        <span class="bu">print</span>(<span class="st">&quot;Buzz&quot;</span>)</a>
+<a class="sourceLine" id="cb1-8" title="8">    <span class="cf">else</span>:</a>
+<a class="sourceLine" id="cb1-9" title="9">        <span class="bu">print</span>(num) </a></code></pre></div>
 <p>While their is nothing wrong with using imperative style loops to solve questions like FizzBuzz. Sometimes, looping is not quite the tool need. ReasonML comes in with its functional background with a concept known as <code>pattern matching</code>. Pattern matching is the act of looking at a sequence of tokens/variables and only applying a method if the token fits the case. This can be seen below with this idea being applied to FizzBuzz:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">let</span> fizzBuzz <span class="op">=</span> (x<span class="op">:</span> int)<span class="op">:</span> string <span class="op">=&gt;</span> <span class="op">{</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="cf">switch</span>(x)<span class="op">{</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">        <span class="op">|</span> _ when x mod <span class="dv">15</span> <span class="op">===</span> <span class="dv">0</span> <span class="op">=&gt;</span> <span class="st">&quot;Fizzbuzz&quot;</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">        <span class="op">|</span> _ when x mod <span class="dv">3</span> <span class="op">===</span> <span class="dv">0</span> <span class="op">=&gt;</span> <span class="st">&quot;Fizz&quot;</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">        <span class="op">|</span> _ when x mod <span class="dv">5</span> <span class="op">===</span> <span class="dv">0</span> <span class="op">=&gt;</span> <span class="st">&quot;Buzz&quot;</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">        <span class="op">|</span> _ <span class="op">=&gt;</span> <span class="at">string_of_int</span>(x)</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="op">};</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="op">};</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">let</span> fizzBuzz <span class="op">=</span> (x<span class="op">:</span> int)<span class="op">:</span> string <span class="kw">=&gt;</span> <span class="op">{</span></a>
+<a class="sourceLine" id="cb2-2" title="2">    <span class="cf">switch</span>(x)<span class="op">{</span></a>
+<a class="sourceLine" id="cb2-3" title="3">        <span class="op">|</span> _ when x mod <span class="dv">15</span> <span class="op">===</span> <span class="dv">0</span> <span class="kw">=&gt;</span> <span class="st">&quot;Fizzbuzz&quot;</span></a>
+<a class="sourceLine" id="cb2-4" title="4">        <span class="op">|</span> _ when x mod <span class="dv">3</span> <span class="op">===</span> <span class="dv">0</span> <span class="kw">=&gt;</span> <span class="st">&quot;Fizz&quot;</span></a>
+<a class="sourceLine" id="cb2-5" title="5">        <span class="op">|</span> _ when x mod <span class="dv">5</span> <span class="op">===</span> <span class="dv">0</span> <span class="kw">=&gt;</span> <span class="st">&quot;Buzz&quot;</span></a>
+<a class="sourceLine" id="cb2-6" title="6">        <span class="op">|</span> _ <span class="kw">=&gt;</span> <span class="at">string_of_int</span>(x)</a>
+<a class="sourceLine" id="cb2-7" title="7">    <span class="op">};</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="op">};</span></a></code></pre></div>
 <p>To explain this function, FizzBuzz is a function that takes in a integer labeled x, and outputs a string as its result. Then below their is a <code>switch</code> statement, a way to signify that pattern matching is going on. After the statement, various cases are presented, so when x falls into a certain case, it then outputs the result it matches. However, we are getting ahead of ourselves. While this is a good example of the power of ReasonML, to get to this point, one needs to understand the basics of the language.</p>
 <h3 id="some-pointers">Some Pointers</h3>
 <p>Like in most languages, the hello world statement is rather simple:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="at">print_endline</span>(<span class="st">&quot;Hello world!&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb3-1" title="1"><span class="at">print_endline</span>(<span class="st">&quot;Hello world!&quot;</span>)</a></code></pre></div>
 <p>The virtue of ReasonML/OCaml, is that due to its strong type system, their are <em>several</em> different print statements, each devoted to a different type of variable, from integers to strings.</p>
 <p>Variables, like in many functional languages, are immutable. Here is an example of a variable along with basic concatenation:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">let</span> hello <span class="op">=</span> <span class="st">&quot;hello&quot;</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">let</span> world <span class="op">=</span> <span class="st">&quot;world&quot;</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="at">print_endline</span>(hello <span class="op">++</span> world)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">let</span> hello <span class="op">=</span> <span class="st">&quot;hello&quot;</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">let</span> world <span class="op">=</span> <span class="st">&quot;world&quot;</span></a>
+<a class="sourceLine" id="cb4-3" title="3"></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="at">print_endline</span>(hello <span class="op">++</span> world)</a></code></pre></div>
 <p>The strength of the OCaml type system allows one not to declare types, but declaring types in variables is simple and can prove to be helpful, especially with functions.</p>
 <p>To look at an example of declaring types, lets using the very common square function example:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">let</span> add <span class="op">=</span> (x<span class="op">:</span> int<span class="op">,</span> y<span class="op">:</span> int)<span class="op">:</span> int <span class="op">=&gt;</span> x <span class="op">+</span> y</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">let</span> a<span class="op">:</span> int <span class="op">=</span> <span class="dv">3</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">let</span> b<span class="op">:</span> int <span class="op">=</span> <span class="dv">5</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="at">add</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">let</span> add <span class="op">=</span> (x<span class="op">:</span> int<span class="op">,</span> y<span class="op">:</span> int)<span class="op">:</span> int <span class="kw">=&gt;</span> x <span class="op">+</span> y</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">let</span> a<span class="op">:</span> int <span class="op">=</span> <span class="dv">3</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="kw">let</span> b<span class="op">:</span> int <span class="op">=</span> <span class="dv">5</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="at">add</span>(<span class="dv">3</span><span class="op">,</span> <span class="dv">5</span>)</a></code></pre></div>
 <p>If one decided to declare a as a string, the compiler would not let you do that. That proves to be a useful guiding hand when working with functions in ReasonML.</p>
 <p>As seen, functions are declared also with a <code>let</code> statement, but conveniently, befitting a functional programming language, recursion gets treated uniquely when declaring functions. While not needed, a <code>rec</code> when declaring a ReasonML function shows to you and the compiler that you are declaring a recursive function. To give a simple example of a recursive function, here is fibonacci done in Reason:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">let</span> rec fib <span class="op">=</span> <span class="at">fun</span>(x<span class="op">:</span> int) <span class="op">=&gt;</span> <span class="cf">switch</span>(x) <span class="op">{</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">    <span class="op">|</span> _ <span class="at">when</span> (x <span class="op">&lt;</span> <span class="dv">2</span>) <span class="op">=&gt;</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">    <span class="op">|</span> _ <span class="op">=&gt;</span> (<span class="at">fib</span> (x <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> <span class="at">fib</span>(x <span class="op">-</span> <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="op">};</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="cf">for</span> (x <span class="kw">in</span> <span class="dv">1</span> to <span class="dv">10</span>)<span class="op">{</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">    <span class="va">Js</span>.<span class="at">log</span>(<span class="at">fib</span>(x))<span class="op">;</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="op">}</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript"><code class="sourceCode javascript"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">let</span> rec fib <span class="op">=</span> <span class="at">fun</span>(x<span class="op">:</span> int) <span class="kw">=&gt;</span> <span class="cf">switch</span>(x) <span class="op">{</span></a>
+<a class="sourceLine" id="cb6-2" title="2">    <span class="op">|</span> _ <span class="at">when</span> (x <span class="op">&lt;</span> <span class="dv">2</span>) <span class="kw">=&gt;</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb6-3" title="3">    <span class="op">|</span> _ <span class="kw">=&gt;</span> (<span class="at">fib</span> (x <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> <span class="at">fib</span>(x <span class="op">-</span> <span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="op">};</span></a>
+<a class="sourceLine" id="cb6-5" title="5"></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="cf">for</span> (x <span class="kw">in</span> <span class="dv">1</span> to <span class="dv">10</span>)<span class="op">{</span></a>
+<a class="sourceLine" id="cb6-7" title="7">    <span class="va">Js</span>.<span class="at">log</span>(<span class="at">fib</span>(x))<span class="op">;</span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="op">}</span></a></code></pre></div>
 <p>While not in the scope in this tutorial, the reason we are able to do a more imperative style loop, as due to the interoperability of JavaScript and Reason, one can use JavaScript in Reason code. However, it is recommended to make sure you declare your types properly. This trait combined with ReasonMLs legacy of imperative style from OCaml, lets one do imperative programming when needed.</p>
 <p>While their is a lot more I want to talk about with ReasonML, these are a few simple things that caught my eye, and I found interesting to compare in contrast. Their are more interesting topics to write about ReasonML however, and I will be covering them in the future. I believe that ReasonML represents a interesting development not only in how we do JavaScript, but how it expands OCaml to people who would not normally code in it. For just this, that makes Reason something to keep your eyes peeled on.</p>
     </section>

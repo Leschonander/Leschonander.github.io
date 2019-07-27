@@ -56,45 +56,45 @@
 <p>To give a example of a intresting usage of data gotten with a request, let look at the <a href="https://www.refinery29.com/money-diary-new-york-city-marketing-intern-income">Refinery29</a> Money Diary article about the intern who makes 25$ per hour plus a 1000$ allowence that justifilably made the internet blow up. In this case gathering data about word usage.</p>
 <p>To begin, if you do not have requests installed already, in your command line enviroment, do <code>pip install requests</code> to install requests.</p>
 <p>Then at minimum, here is the following code to grab the data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1">url <span class="op">=</span> <span class="st">'https://www.refinery29.com/money-diary-new-york-city-marketing-intern-income'</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">req <span class="op">=</span> requests.get(url)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" title="1">url <span class="op">=</span> <span class="st">'https://www.refinery29.com/money-diary-new-york-city-marketing-intern-income'</span></a>
+<a class="sourceLine" id="cb1-2" title="2">req <span class="op">=</span> requests.get(url)</a></code></pre></div>
 <p>Now that requests has grabbed the data, the most important part comes in, cleaning the data and extracting the information that one wants.</p>
 <p>In this case, we will be using <a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/">Beautiful Soup</a> a Python package that makes it easy to extract text from webpages. Additionally, to make sure the information we collect is accurate, we will be cleaning it as well.</p>
 <p>The BS portion is fairly simple as well, in this case, here is an example.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1">soup <span class="op">=</span> BeautifulSoup(req.text, <span class="st">'html.parser'</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co"># print(soup)</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">text <span class="op">=</span> soup.find_all(class_<span class="op">=</span><span class="st">'section-text'</span>)</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">strText <span class="op">=</span> <span class="bu">str</span>(text)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" title="1">soup <span class="op">=</span> BeautifulSoup(req.text, <span class="st">'html.parser'</span>)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="co"># print(soup)</span></a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4">text <span class="op">=</span> soup.find_all(class_<span class="op">=</span><span class="st">'section-text'</span>)</a>
+<a class="sourceLine" id="cb2-5" title="5">strText <span class="op">=</span> <span class="bu">str</span>(text)</a></code></pre></div>
 <p>Once the data is collected, it is time to clean it, using the following Regex, I created some simple functions that can clean text. They are displayed below.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">def</span> cleanHTML(text):</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="cf">return</span> re.sub(<span class="st">'&lt;[^&lt;]+?&gt;'</span>, <span class="st">''</span>, <span class="bu">str</span>(text))</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">def</span> removeMisc(text):</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="cf">return</span> re.sub(<span class="st">&quot;’:,‘&quot;</span>, <span class="st">''</span>, <span class="bu">str</span>(text))</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">    </a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw">def</span> remove_non_ascii(text):</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="cf">return</span> unidecode(<span class="bu">str</span>(text))</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">    </a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw">def</span> cleanser(text):</a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">    <span class="cf">return</span> remove_non_ascii(removeMisc(cleanHTML(text)))</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">def</span> cleanHTML(text):</a>
+<a class="sourceLine" id="cb3-2" title="2">    <span class="cf">return</span> re.sub(<span class="st">'&lt;[^&lt;]+?&gt;'</span>, <span class="st">''</span>, <span class="bu">str</span>(text))</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">def</span> removeMisc(text):</a>
+<a class="sourceLine" id="cb3-4" title="4">    <span class="cf">return</span> re.sub(<span class="st">&quot;’:,‘&quot;</span>, <span class="st">''</span>, <span class="bu">str</span>(text))</a>
+<a class="sourceLine" id="cb3-5" title="5">    </a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="kw">def</span> remove_non_ascii(text):</a>
+<a class="sourceLine" id="cb3-7" title="7">    <span class="cf">return</span> unidecode(<span class="bu">str</span>(text))</a>
+<a class="sourceLine" id="cb3-8" title="8">    </a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="kw">def</span> cleanser(text):</a>
+<a class="sourceLine" id="cb3-10" title="10">    <span class="cf">return</span> remove_non_ascii(removeMisc(cleanHTML(text)))</a></code></pre></div>
 <p>The following functions remove HTML along with any non UTF-8 charachters that could cause problems later.</p>
 <p>Now to create create a chart looking at most common words, several steps need to be taken. First if not done already <code>pip install matplotlib</code> and <code>pip install nltk</code> and import them. Next, with NLTK now it is time to convert the array of text into tokens.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" data-line-number="1">tokenizer <span class="op">=</span> RegexpTokenizer(<span class="vs">r'\w+'</span>) <span class="co">#This tokenizer more hi-powered then the usual ones...</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">tokens <span class="op">=</span> tokenizer.tokenize(cleanedText)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="bu">print</span>(tokens)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" title="1">tokenizer <span class="op">=</span> RegexpTokenizer(<span class="vs">r'\w+'</span>) <span class="co">#This tokenizer more hi-powered then the usual ones...</span></a>
+<a class="sourceLine" id="cb4-2" title="2">tokens <span class="op">=</span> tokenizer.tokenize(cleanedText)</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="bu">print</span>(tokens)</a></code></pre></div>
 <p>With the data as tokens, several things can be done. Firstly, one can turn this data into a pandas dataframe, and then into a csv file that counts frequency.</p>
 <p>With a simple <code>df.head()</code> or <code>df.tail()</code> or <code>df.describe()</code>, useful information can be extracted from the data set. To do that, <code>pip install pandas</code>, then <code>import pandas as pd</code>, and look at the following</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" data-line-number="1">fd <span class="op">=</span> nltk.FreqDist(tokens)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">fdS <span class="op">=</span> pd.Series(fd)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="bu">print</span>(fdS)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">df <span class="op">=</span> pd.DataFrame(fdS)</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="bu">print</span>(df.tail())</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">df.to_csv(<span class="st">&quot;ref28Data.csv&quot;</span>, encoding<span class="op">=</span><span class="st">'utf-8'</span>, index<span class="op">=</span><span class="va">True</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb5-1" title="1">fd <span class="op">=</span> nltk.FreqDist(tokens)</a>
+<a class="sourceLine" id="cb5-2" title="2">fdS <span class="op">=</span> pd.Series(fd)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="bu">print</span>(fdS)</a>
+<a class="sourceLine" id="cb5-4" title="4">df <span class="op">=</span> pd.DataFrame(fdS)</a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="bu">print</span>(df.tail())</a>
+<a class="sourceLine" id="cb5-6" title="6">df.to_csv(<span class="st">&quot;ref28Data.csv&quot;</span>, encoding<span class="op">=</span><span class="st">'utf-8'</span>, index<span class="op">=</span><span class="va">True</span>)</a></code></pre></div>
 <p>This turns the tokens into a dataframe, which then can be analyzed and turned into a csv file so other people can more easily look at the data set.</p>
 <p>Finally, another important tool in looking at data gathered with requests is <code>matplotlib</code>, with a chart created with matplotlib created below.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">fd.plot(<span class="dv">30</span>, cumulative <span class="op">=</span> <span class="va">False</span>)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">plt.style.use(<span class="st">'Solarize_Light2'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" title="1"></a>
+<a class="sourceLine" id="cb6-2" title="2">fd.plot(<span class="dv">30</span>, cumulative <span class="op">=</span> <span class="va">False</span>)</a>
+<a class="sourceLine" id="cb6-3" title="3">plt.style.use(<span class="st">'Solarize_Light2'</span>)</a></code></pre></div>
 <p><img src="../images/RefNLP.png" alt="Smiley face" height="600" width="600"></p>
 <p>As seen the most common word, considiring it is a diary, is I, with very common words being followed below. An additional form of analysis would be getting rid of all the common words, and looking at that dataset.</p>
 <p>With just requests, we were able to pull in data that could power several different forms of analysis. This is just one out of the many examples of how requests can be able to collect data for research.</p>

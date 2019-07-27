@@ -56,66 +56,66 @@
 <p>Below is a brief tutorial on how to gather text, and preform a sentiment analysis on the resulting information, done with tidytext in R.</p>
 <p>To start, one needs to collect data. While many guides use <a href="https://www.gutenberg.org">Gutenberg</a> books, in this case we will use a data source that requires a little more preparation.</p>
 <p>For starters, lets load the necessary libraries and load the data.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(tidyverse)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(tidytext)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">library</span>(lubridate)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co"># ^ Loading the initial libraries</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">getChannel &lt;-<span class="st"> </span><span class="cf">function</span>(channel){</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">  url &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">paste</span>(<span class="st">&quot;http://api.are.na/v2/channels/&quot;</span>,channel, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>))</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">  data &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(url)</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">  content &lt;-<span class="st"> </span>data<span class="op">$</span>contents</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">  content</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">}</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">df &lt;-<span class="st"> </span><span class="kw">getChannel</span>(<span class="st">&quot;interesting-things-culgqmtbiyw&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(tidyverse)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(tidytext)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">library</span>(lubridate)</a>
+<a class="sourceLine" id="cb1-4" title="4"></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co"># ^ Loading the initial libraries</span></a>
+<a class="sourceLine" id="cb1-6" title="6"></a>
+<a class="sourceLine" id="cb1-7" title="7">getChannel &lt;-<span class="st"> </span><span class="cf">function</span>(channel){</a>
+<a class="sourceLine" id="cb1-8" title="8">  url &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="kw">paste</span>(<span class="st">&quot;http://api.are.na/v2/channels/&quot;</span>,channel, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>))</a>
+<a class="sourceLine" id="cb1-9" title="9">  data &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw">fromJSON</span>(url)</a>
+<a class="sourceLine" id="cb1-10" title="10">  content &lt;-<span class="st"> </span>data<span class="op">$</span>contents</a>
+<a class="sourceLine" id="cb1-11" title="11">  content</a>
+<a class="sourceLine" id="cb1-12" title="12">}</a>
+<a class="sourceLine" id="cb1-13" title="13"></a>
+<a class="sourceLine" id="cb1-14" title="14">df &lt;-<span class="st"> </span><span class="kw">getChannel</span>(<span class="st">&quot;interesting-things-culgqmtbiyw&quot;</span>)</a></code></pre></div>
 <p>In this case, we will be using one of my <a href="https://www.are.na/">are.na</a> channels as a source of textual data. As are.na provides quite a bit of information from it’s API, the specific part of the result needs to be specified. Are.na for reference, is a social media platform that is unique in that it’s not a very textual platform. Instead, users post links to pictures, websites, videos and then organize them into channels. In this case, we are using one of my channels, called <em>interesting things</em>, that is a compilation of mainly articles I found interesting.</p>
 <p>The next step is to convert the data set into a form with only the data we actually need, and then to tokenize it.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">text_df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="dt">desc =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">25</span>,</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="dt">text =</span> df<span class="op">$</span>description,</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="dt">title =</span> df<span class="op">$</span>title,</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="dt">date =</span> df<span class="op">$</span>created_at</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">    <span class="dt">text =</span> <span class="kw">as.character</span>(text),</a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">    <span class="dt">date =</span> <span class="kw">ymd_hms</span>(date)</a>
-<a class="sourceLine" id="cb2-10" data-line-number="10">  )</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">text_df &lt;-<span class="st"> </span><span class="kw">tibble</span>(</a>
+<a class="sourceLine" id="cb2-2" title="2">  <span class="dt">desc =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">25</span>,</a>
+<a class="sourceLine" id="cb2-3" title="3">  <span class="dt">text =</span> df<span class="op">$</span>description,</a>
+<a class="sourceLine" id="cb2-4" title="4">  <span class="dt">title =</span> df<span class="op">$</span>title,</a>
+<a class="sourceLine" id="cb2-5" title="5">  <span class="dt">date =</span> df<span class="op">$</span>created_at</a>
+<a class="sourceLine" id="cb2-6" title="6">) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb2-8" title="8">    <span class="dt">text =</span> <span class="kw">as.character</span>(text),</a>
+<a class="sourceLine" id="cb2-9" title="9">    <span class="dt">date =</span> <span class="kw">ymd_hms</span>(date)</a>
+<a class="sourceLine" id="cb2-10" title="10">  )</a></code></pre></div>
 <p>The usage of tidyverse is out in full force, as <code>tibble</code> and <code>mutate</code> are part of some of data manipulation functions that come with the package, which provide a neat functional interface to do data analytics.</p>
 <p>As seen above, we created a tibble, a type of dataframe, with text from the description of a are.na channel, the title of the channel, and the date the channel was created. We also with <code>lubridate</code> cleaned some of the date information so it’s stored as a date and not as a character object.</p>
 <p>Once we have this information, it is time to create the tokens. Before we do that, we should load <code>stop_words</code>, as we do not want some words in our dataset. Stop words include words like the or a, words that are very commonly used and so will only skew the analysis in the direction of very generic words.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data</span>(stop_words)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">text_df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw">unnest_tokens</span>(word, text) -&gt;<span class="st"> </span>token_df</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">tidy_desc &lt;-<span class="st"> </span>token_df <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="st">  </span><span class="kw">anti_join</span>(stop_words)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span>(stop_words)</a>
+<a class="sourceLine" id="cb3-2" title="2"></a>
+<a class="sourceLine" id="cb3-3" title="3">text_df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw">unnest_tokens</span>(word, text) -&gt;<span class="st"> </span>token_df</a>
+<a class="sourceLine" id="cb3-5" title="5"></a>
+<a class="sourceLine" id="cb3-6" title="6">tidy_desc &lt;-<span class="st"> </span>token_df <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="st">  </span><span class="kw">anti_join</span>(stop_words)</a></code></pre></div>
 <p>Now one can for example, plot out the frequency of the top ten most common words.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">tidy_desc <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw">count</span>(word, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(word, n)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">    </span><span class="kw">geom_col</span>(<span class="dt">fill =</span> <span class="st">&quot;#1B00D7&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="st">    </span><span class="kw">theme_my_axios</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">tidy_desc <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw">count</span>(word, <span class="dt">sort =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="st">  </span><span class="kw">head</span>(<span class="dv">10</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(word, n)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="st">    </span><span class="kw">geom_col</span>(<span class="dt">fill =</span> <span class="st">&quot;#1B00D7&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="st">    </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="st">    </span><span class="kw">theme_my_axios</span>()</a></code></pre></div>
 <p>Sentiment analysis is looking at the <em>positive</em> or <em>negative</em> associations that words have, and then seeing with the word corpus how positive or negative each word actually is via a cross reference. In this case, we will use the <em>bing</em> corpus, and see how positive or negative the descriptions are for each block.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">(tidy_desc <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">  </span><span class="kw">inner_join</span>(<span class="kw">get_sentiments</span>(<span class="st">&quot;bing&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">  </span><span class="kw">count</span>(title, <span class="dt">index =</span> date, sentiment) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="st">  </span><span class="kw">spread</span>(sentiment, n, <span class="dt">fill =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sentiment =</span> positive <span class="op">-</span><span class="st"> </span>negative) -&gt;<span class="st"> </span>true_tidy_desc)</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co"># Fun note, R is actually a lazy expression language, so the</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co"># parenthesis are required to evaluate the expression. </span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">(tidy_desc <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw">inner_join</span>(<span class="kw">get_sentiments</span>(<span class="st">&quot;bing&quot;</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="st">  </span><span class="kw">count</span>(title, <span class="dt">index =</span> date, sentiment) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="st">  </span><span class="kw">spread</span>(sentiment, n, <span class="dt">fill =</span> <span class="dv">0</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">sentiment =</span> positive <span class="op">-</span><span class="st"> </span>negative) -&gt;<span class="st"> </span>true_tidy_desc)</a>
+<a class="sourceLine" id="cb5-6" title="6"></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co"># Fun note, R is actually a lazy expression language, so the</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co"># parenthesis are required to evaluate the expression. </span></a></code></pre></div>
 <p>By making having a index (which could the a page or chapter), one could be able to track over time or book how much the sentiment has changed.</p>
 <p>One for example with the index, could evaluate the sentiment of a description by hour, and see what time of the day has positive versus negative sentiment.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">true_tidy_desc <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">  </span><span class="kw">mutate</span>(</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">    <span class="dt">hour =</span> <span class="kw">hour</span>(index)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">  ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(hour, sentiment, <span class="dt">fill =</span> title)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_my_axios</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">true_tidy_desc <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">mutate</span>(</a>
+<a class="sourceLine" id="cb6-3" title="3">    <span class="dt">hour =</span> <span class="kw">hour</span>(index)</a>
+<a class="sourceLine" id="cb6-4" title="4">  ) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(hour, sentiment, <span class="dt">fill =</span> title)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">show.legend =</span> <span class="ot">FALSE</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_my_axios</span>()</a></code></pre></div>
 <p>While their is plenty of more to learn in the field of textual analysis, at minimum, sentiment analysis and knowing what tokenizing is represents a start in a good direction.</p>
     </section>
 </article>

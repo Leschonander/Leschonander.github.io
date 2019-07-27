@@ -56,26 +56,26 @@
 <p>To get started, here is a little tutorial of Prophet.</p>
 <h3 id="note">Note:</h3>
 <p>As seen on the <a href="https://github.com/facebook/prophet/issues/2">issues</a> page on GitHub, Prophet has some problems working on Windows computers. While a majority of the functionality will work, some parts, such as graphing the predictions, will not work, partly because of Prophet and because of the main dependency, <a href="https://pystan.readthedocs.io/en/latest/">PyStan</a>, which also seems to have problems on Windows. As usual to install PyStan to get started:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1">pip install pystan</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" title="1">pip install pystan</a></code></pre></div>
 <p>To begin, follow the previous installation along with doing the below to install prophet on your machine.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" data-line-number="1">pip install fbprophet</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb2-1" title="1">pip install fbprophet</a></code></pre></div>
 <p>For this example, we will be using a dataset from <a href="https://tools.wmflabs.org/pageviews/?project=en.wikipedia.org&amp;platform=all-access&amp;agent=user&amp;range=latest-20&amp;pages=">PageViews</a>, a Wikimedia service that allows one to see the daily page views of any page of Wikipedia, along with other related services such as redirect views and compare across languages, a useful service to track the popularity of subjects.</p>
 <p>For this tutorial, we will be looking at the pageviews of newly famous politician <a href="https://en.wikipedia.org/wiki/Alexandria_Ocasio-Cortez">Alexandria Ocasio-Cortez</a>, mainly because it is interesting how much reporting around her has exploded, and this can be seen with her pageview results.</p>
 <p>To start, here is the following</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="im">from</span> fbprophet <span class="im">import</span> Prophet</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">plt.style.use(<span class="st">'Solarize_Light2'</span>)</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">dataframe <span class="op">=</span> pd.read_csv(<span class="st">'Alexandria.csv'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb3-1" title="1"><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="im">import</span> pandas <span class="im">as</span> pd</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="im">from</span> fbprophet <span class="im">import</span> Prophet</a>
+<a class="sourceLine" id="cb3-4" title="4"></a>
+<a class="sourceLine" id="cb3-5" title="5">plt.style.use(<span class="st">'Solarize_Light2'</span>)</a>
+<a class="sourceLine" id="cb3-6" title="6"></a>
+<a class="sourceLine" id="cb3-7" title="7">dataframe <span class="op">=</span> pd.read_csv(<span class="st">'Alexandria.csv'</span>)</a></code></pre></div>
 <p>One does not need matplotlib for Prophet, but it will prove useful for doing an initial look at the dataset. We need <a href="https://pandas.pydata.org/">Pandas</a> to shape the CSV file into a data frame useable by Prophet. The data itself requires <em>two</em> forms of data. First the time series data in the form of month/day/year and a Y variable, such as pageviews in this case, which is the data we are forecasting.</p>
 <p>Before working with Prophet, here is some simple tools from Pandas to have a look at the dataset</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="bu">print</span>(df.describe())</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">dataframe.hist()</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">plt.ylabel(<span class="st">&quot;Occurrence&quot;</span>, fontsize <span class="op">=</span> <span class="dv">14</span>)</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">plt.title(<span class="st">&quot;Histogram of Daily Page Views&quot;</span>, fontsize <span class="op">=</span> <span class="dv">20</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb4-1" title="1"><span class="bu">print</span>(df.describe())</a>
+<a class="sourceLine" id="cb4-2" title="2"></a>
+<a class="sourceLine" id="cb4-3" title="3">dataframe.hist()</a>
+<a class="sourceLine" id="cb4-4" title="4">plt.ylabel(<span class="st">&quot;Occurrence&quot;</span>, fontsize <span class="op">=</span> <span class="dv">14</span>)</a>
+<a class="sourceLine" id="cb4-5" title="5">plt.title(<span class="st">&quot;Histogram of Daily Page Views&quot;</span>, fontsize <span class="op">=</span> <span class="dv">20</span>)</a></code></pre></div>
 <p>Describe result here</p>
 <pre><code>                   y
 count      21.000000
@@ -88,9 +88,9 @@ min         2.000000
 max    181780.000000</code></pre>
 <p>As seen, the page is quite new, with their being a very large difference between the min, max, mean, and standard deviation (std) That max is from the last day of the set, being 6/27/2018, the day after she won her primary in 14th congressional district of New York against incumbent Democratic Representative Joseph Crowley.</p>
 <p>Now here is the basic code to work with Prophet.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" data-line-number="1">model <span class="op">=</span> Prophet()</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">model.fit(dataframe)</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">future <span class="op">=</span> m.make_future_dataframe(periods<span class="op">=</span><span class="dv">365</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb6-1" title="1">model <span class="op">=</span> Prophet()</a>
+<a class="sourceLine" id="cb6-2" title="2">model.fit(dataframe)</a>
+<a class="sourceLine" id="cb6-3" title="3">future <span class="op">=</span> m.make_future_dataframe(periods<span class="op">=</span><span class="dv">365</span>)</a></code></pre></div>
 <p>First with Prophet() to initiate the Prophet object to analyze the dataframe, then we with the Prophet object fit our dataset into it, and in that last line of code, we make a forecast that is equal to 365 days, with periods=365 meaning we specify to look 365 days/1 year later.</p>
 <p>And now for the last portion, where we can look at the results of the analysis.</p>
 <h3 id="note-1">Note:</h3>
@@ -102,10 +102,10 @@ max    181780.000000</code></pre>
  0,2,0 (2nd partial derivative of y)
  0,0,2](2nd partial derivative of z)</code></pre>
 <p>Now for the results of the analysis.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="bu">print</span>(future.tail())</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">forecast <span class="op">=</span> model.predict(future)</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="bu">print</span>(forecast[[<span class="st">'ds'</span>, <span class="st">'yhat'</span>, <span class="st">'yhat_lower'</span>, <span class="st">'yhat_upper'</span>]].tail())</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="bu">print</span>(forecast.describe())</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb8-1" title="1"><span class="bu">print</span>(future.tail())</a>
+<a class="sourceLine" id="cb8-2" title="2">forecast <span class="op">=</span> model.predict(future)</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="bu">print</span>(forecast[[<span class="st">'ds'</span>, <span class="st">'yhat'</span>, <span class="st">'yhat_lower'</span>, <span class="st">'yhat_upper'</span>]].tail())</a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="bu">print</span>(forecast.describe())</a></code></pre></div>
 <p>First let us look at the print statement:</p>
 <pre><code>            ds           yhat     yhat_lower     yhat_upper
 381 2019-06-23  687963.404739  652022.556382  728502.770550
