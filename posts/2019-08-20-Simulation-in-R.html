@@ -63,7 +63,7 @@
 <a class="sourceLine" id="cb1-4" title="4">            <span class="dt">average =</span> <span class="kw">cummean</span>(coinflip)</a>
 <a class="sourceLine" id="cb1-5" title="5">        ) -&gt;<span class="st"> </span>coinFlips</a></code></pre></div>
 <p>In this case, we a are simulating the flip of a coin, with heads being 0, tails being 1, with flips being done 100,000 times. The average in this case represents the cumulative mean of the coin flips overtime, which after many flips will approximate the probability of the action.</p>
-<p>This is knowm as the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">Law of Large Numbers</a>, which states that the average calculated from the result of all the trials should get closer to the expected value as more trials are done.</p>
+<p>This is known as the <a href="https://en.wikipedia.org/wiki/Law_of_large_numbers">Law of Large Numbers</a>, which states that the average calculated from the result of all the trials should get closer to the expected value as more trials are done.</p>
 <p>This can be visualized as well.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">coinFlips <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(trial, average)) <span class="op">+</span><span class="st"> </span></a>
@@ -134,7 +134,7 @@
 <p>What <code>crossing</code> does is it will in this case create a 1:1e5x10 dataframe, meaning each trial has 10 turns, so in practice there will be a million rows in the dataframe.</p>
 <p>Next, we take a sample for each turn. However, to get the cumulative result, we need to group by trial, so each 1:10 period has its own cumulative sum.</p>
 <p>After this, we can then look at the 10th spin to see the probability of a negative spin.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">runs <span class="op">%&gt;%</span><span class="st"> </span></a>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">spins <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb5-2" title="2">	<span class="kw">filter</span>(turn <span class="op">==</span><span class="st"> </span><span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb5-3" title="3">	<span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">ifelse</span>(wheelSum <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;Negative&quot;</span>, <span class="st">&quot;Positive&quot;</span>)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb5-4" title="4">	<span class="kw">group_by</span>(value) <span class="op">%&gt;%</span><span class="st"> </span></a>
