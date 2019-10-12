@@ -1,1 +1,241 @@
-@import url('https://fonts.googleapis.com/css?family=EB+Garamond');html{font-size:62.5%;font-family:'EB Garamond',serif}body{font-size:1.6rem;color:#333333;background:#f6f9fc}header{border-bottom:0.2rem solid #37bbe4;text-align:center}header a{font-size:1.8rem;font-weight:bold;color:#333333;text-transform:uppercase;margin:0px 10px 0px 10px}main{background:ghostwhite;box-shadow:5px 5px 20px #C6C6C6;padding:5px;border-radius:5px}#name{margin-bottom:0.01px;margin-top:0.5px;text-align:center;font-weight:600;font-size:36px}footer{margin-top:3rem;padding:1.2rem 0;border-top:0.2rem solid #37bbe4;font-size:1.2rem;color:#555}h1{font-size:2.4rem}h2{font-size:2rem}article .header{font-size:1.4rem;font-style:italic;color:#555}.face{float:right;position:relative;border-radius:50%;height:200px;width:200px;top:-40px}.imgContent{margin:auto;width:200px;height:200px}.logo a{font-weight:bold;color:#333333}#logoFont{font-size:24px;text-decoration:underline;color:#f54123}a:not(.sourceLine):hover{color:#37bbe4}hr{overflow:visible;height:30px;border-style:dashed;border-color:#3F5EFB;border-width:1px 0 0 0}.sourceCode{background:#efebed;border-radius:5px;padding-top:2.5px;padding-left:2.5px;padding-bottom:2.5px;line-height:1.5}blockquote{border-left:.25em solid #efebed;color:#6a737d;padding:0 1em}#socialMedia{height:25px;width:25px;opacity:.75;margin-right:10px;text-align:center}#socialMedia::after{transition:opacity 0.3s ease-in-out}#socialMedia:hover{opacity:1}#socialMedia:hover::after{transition:opacity 0.3s ease-in-out}table{margin:0 auto;border:1px dashed #333}#arena{width:600px;height:600px}@media (max-width:319px){body{width:90%;margin:0;padding:0 5%}header{margin:4.2rem 0}nav{margin:0 auto 3rem;text-align:center}footer{text-align:center}.logo{text-align:center;margin:1rem auto 3rem}.logo a{font-size:2.4rem}nav a{display:block;line-height:1.6}}@media (min-width:320px){body{width:90%;margin:0;padding:0 5%}header{margin:4.2rem 0}nav{margin:0 auto 3rem;text-align:center}footer{text-align:center}.logo{text-align:center;margin:1rem auto 3rem}.logo a{font-size:2.4rem}nav a{display:inline;margin:0 0.6rem}}@media (min-width:640px){body{width:60rem;margin:0 auto;padding:0}header{margin:0 0 3rem;padding:1.2rem 0}nav{margin:0;text-align:right}nav a{margin:0 0 0 1.2rem;display:inline}footer{text-align:right}.logo{margin:0;text-align:left}.logo a{float:left;font-size:1.8rem}}
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond');
+
+html {
+  font-size: 62.5%;
+  font-family: 'EB Garamond', serif;
+}
+
+body {
+  font-size: 1.6rem;
+  color: #333333;
+  background: #f6f9fc;  /*#f6f9fc */
+}
+
+header {
+  border-bottom: 0.2rem solid #37bbe4;
+  text-align: center;
+}
+
+header a {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333333;
+  text-transform: uppercase;
+  margin: 0px 10px 0px 10px;
+}
+
+/*For the body of a article...
+main {
+  background: ghostwhite;
+  box-shadow: 5px 5px 20px #C6C6C6;
+  padding: 5px; 
+  border-radius: 5px;
+}*/
+
+
+#name {
+  margin-bottom: 0.01px;
+  margin-top: 0.5px; 
+  text-align: center;
+  font-weight: 600;
+  font-size: 36px;
+}
+
+footer {
+  margin-top: 3rem;
+  padding: 1.2rem 0;
+  border-top: 0.2rem solid #37bbe4;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+h1 {
+  font-size: 2.4rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+article .header {
+  font-size: 1.4rem;
+  font-style: italic;
+  color: #555;
+}
+
+.face {
+  float: right; 
+  position: relative;
+  border-radius: 50%; 
+  height: 200px;  
+  width: 200px;
+  top: -40px;
+}
+/*for inline images*/
+.imgContent {
+  margin: auto;
+  width: 200px;
+  height: 200px;
+}
+
+.logo a {
+  font-weight: bold;
+  color: #333333;
+}
+
+#logoFont {
+  font-size: 24px; 
+  text-decoration: underline;
+  color: #f54123;
+}
+
+a:not(.sourceLine):hover{
+  color: #37bbe4;
+}
+
+hr {
+  overflow: visible; /* For IE */
+  height: 30px;
+  border-style: dashed;
+  border-color: #3F5EFB;
+  border-width: 1px 0 0 0;
+}
+
+.sourceCode {
+  background: #efebed;
+  border-radius: 5px;
+  padding-top: 2.5px;
+  padding-left: 2.5px;
+  padding-bottom: 2.5px;
+  line-height: 1.5;
+}
+
+blockquote {
+  border-left: .25em solid #efebed;
+  color: #6a737d;
+  padding: 0 1em;
+}
+
+/* ::selection { background: red; } */
+
+/* Social Media Opacity effect */
+#socialMedia {
+  height: 25px;
+  width: 25px; 
+  opacity: .75;
+  margin-right: 10px;
+  text-align: center;
+}
+
+#socialMedia::after {
+  transition: opacity 0.3s ease-in-out;
+}
+
+#socialMedia:hover {
+  opacity: 1;
+}
+
+#socialMedia:hover::after {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/*Table things*/
+table {
+  margin: 0 auto;
+  border: 1px dashed #333;
+}
+
+#arena {
+  width: 600px;
+  height: 600px;
+}
+
+/* Social Media Opacity effect */
+@media (max-width: 319px) {
+  body {
+    width: 90%;
+    margin: 0;
+    padding: 0 5%;
+  }
+  header {
+    margin: 4.2rem 0;
+  }
+  nav {
+    margin: 0 auto 3rem;
+    text-align: center;
+  }
+  footer {
+    text-align: center;
+  }
+  .logo {
+    text-align: center;
+    margin: 1rem auto 3rem;
+  }
+  .logo a {
+    font-size: 2.4rem;
+  }
+  nav a {
+    display: block;
+    line-height: 1.6;
+  }
+}
+
+@media (min-width: 320px) {
+  body {
+    width: 90%;
+    margin: 0;
+    padding: 0 5%;
+  }
+  header {
+    margin: 4.2rem 0;
+  }
+  nav {
+    margin: 0 auto 3rem;
+    text-align: center;
+  }
+  footer {
+    text-align: center;
+  }
+  .logo {
+    text-align: center;
+    margin: 1rem auto 3rem;
+  }
+  .logo a {
+    font-size: 2.4rem;
+  }
+  nav a {
+    display: inline;
+    margin: 0 0.6rem;
+  }
+}
+
+@media (min-width: 640px) {
+  body {
+    width: 60rem;
+    margin: 0 auto;
+    padding: 0;
+  }
+  header {
+    margin: 0 0 3rem;
+    padding: 1.2rem 0;
+  }
+  nav {
+    margin: 0;
+    text-align: right;
+  }
+  nav a {
+    margin: 0 0 0 1.2rem;
+    display: inline;
+  }
+  footer {
+    text-align: right;
+  }
+  .logo {
+    margin: 0;
+    text-align: left;
+  }
+  .logo a {
+    float: left;
+    font-size: 1.8rem;
+  }
+}
