@@ -39,6 +39,7 @@
         <header>
                 <a href="../">Home</a>
                 <a href="../about.html">About</a>
+                <a href="../graphics.html">Graphics</a>
                 <a href="../contact.html">Contact</a>
                 <a href="../archive.html">Archive</a>
             
@@ -55,7 +56,7 @@
         <p>Something I think about off and on again whenever I code, is the state of the documentation of tooling when actually deploying applications to the web. This weekend at <a href="https://hackny.org/">hackNY</a>, proved to be a case point in my theory <em>documentation regarding software deployment is kinda terrible</em>.</p>
 <p>For the project our team worked on, I was responsible for the backend. This was a API made in flask using scikit-learn to deploy a machine learning model I trained based on the income data of refugees that entered the United States. The model itself wasn’t that bad to create, I prototyped the design in R, and then used Flask to allow users to make POST requests to it. The trouble came during deployment the API to the internet.</p>
 <p>I initially used Heroku, a PAAS (Platform as a Service), to deploy the Flask API to the internet. Unfortunately, Heroku had a extreme dislike to the file structure that I was uploading. One strange problem was that while I did <code>run.py</code> to keep the app in a <code>app</code> folder, the way the directory’s read meant the CSV file that the model was trained off of would refuse to be read by pandas.</p>
-<p>After around seven deployments and muant <code>Heroku Logs</code>, I decided to user Render, another PAAS albeit much newer. The virtue of Render, compared to Heroku, is that I could run everything with just a <code>App.py</code> and <code>Requirements.txt</code> file, along with have the CSV file be in the main directory.</p>
+<p>After around seven deployments and many <code>Heroku Logs</code>, I decided to user Render, another PAAS albeit much newer. The virtue of Render, compared to Heroku, is that I could run everything with just a <code>App.py</code> and <code>Requirements.txt</code> file, along with have the CSV file be in the main directory.</p>
 <p>The reason I bring this up is, <em>why do accept that our technical infrastructure will be so poorly documented?</em></p>
 <p>While StackOverflow is great and all, it’s a bit concerning how spare the documentation for debugging and deploying applications that are not the default that these services have.</p>
 <p>This concern is also combined with some snooping I did with networking tools I did recently regarding a application quiet a few people use. In the <code>GET</code> requests, one’s API keys are accessible on the frontend and by making more requests, other APIs that require that key are easily callable.</p>
