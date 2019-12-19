@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+        <title>Lars Erik Schonander</title>
+        <meta name="title" content="Lars Erik Schonander">
+        <meta name="description" content="Personal writing, links, and other miscellanea by Lars Erik Schonander. ">
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://www.larserikschonander.com/">
+        <meta property="og:title" content="Lars Erik Schonander">
+        <meta property="og:description" content="Personal writing, links, and other miscellanea by Lars Erik Schonander. ">
+        <meta property="og:image" content>
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:url" content="https://www.larserikschonander.com/">
+        <meta property="twitter:title" content="Lars Erik Schonander">
+        <meta property="twitter:description" content="Personal writing, links, and other miscellanea by Lars Erik Schonander. ">
+        <meta property="twitter:image" content>
+        <link rel="stylesheet" href="../css/default.css" />
+        <link rel="shortcut icon" href="../images/icon_HSn_icon.ico" type="image/x-icon" />
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121467707-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-121467707-1');
+    </script>
+    </head>
+    <body>  
+        <h1 id="name">Lars E. Schonander</h1>
+        <header>
+                <a href="../">Home</a>
+                <a href="../about.html">About</a>
+                <a href="../graphics.html">Graphics</a>
+                <a href="../contact.html">Contact</a>
+                <a href="../archive.html">Archive</a>
+            
+        </header>
+
+        <main role="main">
+            <h1>Tidy Quantiles for Geospatial Programming</h1>
+            <article>
+    <section class="header">
+        Posted on December 17, 2019
+        
+    </section>
+    <section>
+        <p>After doing some geospatial work in R, and inspired by a friend, who worked on a major project involve large amounts of quantile creation for map algebra, I realized a problem. There is no good tidy way to create quantiles with the tidyverse.</p>
+<p>For creating things such as <a href="https://en.wikipedia.org/wiki/Bivariate_map">Bivariate maps</a>, the creation of quantiles is required to figure out which category each observation will fall under. While one can copy and paste the code to create quantiles, it would be nice to do things in a tidy fashion, along with bring in some tools to make working with geospatial data slightly easier.</p>
+<h3 id="cutting-things-up">Cutting Things Up</h3>
+<p>The first function itself is very simple, as seen below.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">station_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="st">  </span><span class="kw">tidy_quantile</span>(., num_bikes_available, <span class="dv">5</span>)</a></code></pre></div>
+<p><br /></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"> <span class="dv">0</span><span class="op">%  25%</span><span class="st">  </span><span class="dv">50</span><span class="op">%  75%</span><span class="st"> </span><span class="dv">100</span>% </a>
+<a class="sourceLine" id="cb2-2" title="2">  <span class="dv">0</span>    <span class="dv">4</span>    <span class="dv">7</span>   <span class="dv">11</span>   <span class="dv">43</span></a></code></pre></div>
+<p>One can not only use the pipe operator to send the data that will be converted into quantiles, but the interface also allows one to create quantiles for any percentile one desires.</p>
+<p>It also works as a way to end a group_by after one does a <code>count</code>. The sky is the limit however, for what method you want to do to pipe the data in</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">station_data <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="st">  </span><span class="kw">group_by</span>(region_id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="kw">count</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw">tidy_quantile</span>(., n, <span class="dv">4</span>)</a></code></pre></div>
+<p><br /></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="dv">0</span><span class="op">% 33%</span><span class="st"> </span><span class="dv">66</span><span class="op">% 100%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="dv">10</span>  <span class="dv">32</span>  <span class="dv">43</span>  <span class="dv">304</span></a></code></pre></div>
+<h3 id="geospatial-quantile-analysis">Geospatial Quantile Analysis</h3>
+<p>The second part of this potential package is doing the same, but with geospatial data. At least for me, copying and pasting <code>st_join</code> and then <code>group_by</code> over and over again is not very <a href="https://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a>. This can be fixed however!</p>
+<p>Instead of copying and pasting code over and over again, for example, this is possible!</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">tidy_quantile_st</span>(station_data.SF, dc_census_shapefiles, <span class="kw">as.character</span>(OBJECTID), <span class="dv">5</span>)</a></code></pre></div>
+<p><br /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="dv">0</span><span class="op">%   25%</span><span class="st">   </span><span class="dv">50</span><span class="op">%   75%</span><span class="st">  </span><span class="dv">100</span>% </a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="fl">1.0</span>   <span class="fl">1.0</span>   <span class="fl">1.5</span>   <span class="fl">3.0</span> <span class="fl">273.0</span></a></code></pre></div>
+<p>Additionally, I discovered that creating a more concise way to talley, espieclly when one needs to merge the results back in for mapping is a nice side effect of the former function.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">tidy_st_tally</span>(station_data.SF, dc_census_shapefiles, OBJECTID) </a></code></pre></div>
+<p><br /></p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">    OBJECTID  n</a>
+<a class="sourceLine" id="cb8-2" title="2">      <span class="op">&lt;</span>dbl<span class="op">&gt;</span><span class="st"> </span><span class="er">&lt;</span>int<span class="op">&gt;</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="st"> </span><span class="dv">1</span>        <span class="dv">1</span>     <span class="dv">2</span></a>
+<a class="sourceLine" id="cb8-4" title="4"> <span class="dv">2</span>        <span class="dv">2</span>     <span class="dv">1</span></a>
+<a class="sourceLine" id="cb8-5" title="5"> <span class="dv">3</span>        <span class="dv">3</span>     <span class="dv">1</span></a>
+<a class="sourceLine" id="cb8-6" title="6"> <span class="dv">4</span>        <span class="dv">4</span>     <span class="dv">3</span></a>
+<a class="sourceLine" id="cb8-7" title="7"> <span class="dv">5</span>        <span class="dv">5</span>     <span class="dv">3</span></a>
+<a class="sourceLine" id="cb8-8" title="8"> <span class="dv">6</span>        <span class="dv">6</span>     <span class="dv">3</span></a>
+<a class="sourceLine" id="cb8-9" title="9"> <span class="dv">7</span>        <span class="dv">7</span>     <span class="dv">2</span></a>
+<a class="sourceLine" id="cb8-10" title="10"> <span class="dv">8</span>       <span class="dv">10</span>     <span class="dv">1</span></a>
+<a class="sourceLine" id="cb8-11" title="11"> <span class="dv">9</span>       <span class="dv">11</span>     <span class="dv">6</span></a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="dv">10</span>       <span class="dv">12</span>     <span class="dv">1</span></a></code></pre></div>
+<p>One can also pipe this into a <code>tidy_quantile</code>, but with the st version existing, why use two functions when one will do all the work?</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>I plan at somepoint to clean these functions up for full release on CRAN/GitHub. However, the function names need to be cleaned up, along with documentation needing to be created for each function. At the very least, it has saved me some time when doing geospatial analysis, from copying and pasting similar code over and over again.</p>
+    </section>
+</article>
+
+        </main>
+
+        <footer>
+            Site proudly built with 
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+            <br>
+            Follow me at:
+            <a href="https://twitter.com/LarsESchonander">@LarsESchonander</a>
+        </footer>
+    </body>
+</html>
